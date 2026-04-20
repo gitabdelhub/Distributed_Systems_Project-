@@ -45,7 +45,7 @@ The system follows a **three-tier distributed architecture**:
 | **Core** | Java 17+, Maven Multi-Module, Threads, `java.net`, `java.rmi` |
 | **Server** | UDP/TCP Listeners, RMI Registry, Spring Boot/JAX-RS (REST), H2/PostgreSQL |
 | **UI Option 1** | JavaFX or Swing, RMI Client, MVC Pattern |
-| **UI Option 2** | Angular / React / Vue, TypeScript, REST API, WebSocket (optional) |
+| **UI Option 2** | Angular / React / Vue, TypeScri`pt, REST API, WebSocket (optional) |
 | **Tools** | Git, PlantUML/Mermaid, Docker (optional), JUnit |
 
 ---
