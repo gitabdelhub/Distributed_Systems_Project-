@@ -12,15 +12,15 @@ public class MetricsExporter {
     }
 
     public String toJSON(List<MetricData> data) {
-        StringBuilder sb = new StringBuilder("[");
-        for (int i = 0; i < data.size(); i++) {
-            MetricData d = data.get(i);
-            sb.append(String.format(
-                "{"agentId":"%s","cpuUsage":%.2f,"ramUsage":%.2f,"diskUsage":%.2f,"timestamp":%d}",
-                d.agentId(), d.cpuUsage(), d.ramUsage(), d.diskUsage(), d.timestamp()
-            ));
-            if (i < data.size() - 1) sb.append(",");
-        }
-        return sb.append("]").toString();
+    StringBuilder sb = new StringBuilder("[");
+    for (int i = 0; i < data.size(); i++) {
+        MetricData d = data.get(i);
+        sb.append(String.format(
+            "{\"agentId\":\"%s\",\"cpuUsage\":%.2f,\"ramUsage\":%.2f,\"diskUsage\":%.2f,\"timestamp\":%d}",
+            d.agentId(), d.cpuUsage(), d.ramUsage(), d.diskUsage(), d.timestamp()
+        ));
+        if (i < data.size() - 1) sb.append(",");
     }
+    return sb.append("]").toString();
+}
 }

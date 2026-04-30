@@ -1,6 +1,6 @@
 package com.monitor.ui.desktop.rmi;
 
-import com.monitor.server.rmi.RMIMetricsService;
+import com.monitor.shared.rmi.RMIMetricsService;
 import com.monitor.shared.constants.Constants;
 import com.monitor.shared.model.MetricData;
 import java.rmi.registry.LocateRegistry;
