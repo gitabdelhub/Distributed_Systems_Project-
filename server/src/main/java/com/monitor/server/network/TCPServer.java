@@ -2,12 +2,16 @@ package com.monitor.server.network;
 
 import com.monitor.server.alerting.AlertDispatcher;
 import com.monitor.server.core.ConcurrentDataStore;
+import com.monitor.shared.constants.NetworkConstants;
 import com.monitor.shared.model.Alert;
 import com.monitor.shared.utils.SerializationUtils;
-import com.monitor.shared.constants.Constants;
 import java.net.*;
 import java.io.*;
 
+/**
+ * Serveur TCP — reçoit les alertes envoyées par les agents (sérialisation Java).
+ * Chaque connexion est traitée dans un thread séparé pour la concurrence.
+ */
 public class TCPServer implements Runnable {
     private final ConcurrentDataStore store;
     private final AlertDispatcher dispatcher = new AlertDispatcher();
@@ -16,14 +20,14 @@ public class TCPServer implements Runnable {
 
     @Override
     public void run() {
-        try (ServerSocket serverSocket = new ServerSocket(Constants.TCP_PORT)) {
-            System.out.println("TCP Server en écoute sur port " + Constants.TCP_PORT);
+        try (ServerSocket serverSocket = new ServerSocket(NetworkConstants.PORT_TCP)) {
+            System.out.println("[TCP] En écoute sur port " + NetworkConstants.PORT_TCP);
             while (true) {
                 Socket client = serverSocket.accept();
-                new Thread(() -> handleClient(client)).start();
+                new Thread(() -> handleClient(client), "TCP-Handler").start();
             }
         } catch (Exception e) {
-            System.err.println("Erreur TCP : " + e.getMessage());
+            System.err.println("[TCP] Erreur : " + e.getMessage());
         }
     }
 
@@ -33,7 +37,7 @@ public class TCPServer implements Runnable {
             store.addAlert(alert);
             dispatcher.dispatch(alert);
         } catch (Exception e) {
-            System.err.println("Erreur traitement alerte TCP : " + e.getMessage());
+            System.err.println("[TCP] Erreur traitement alerte : " + e.getMessage());
         }
     }
 }

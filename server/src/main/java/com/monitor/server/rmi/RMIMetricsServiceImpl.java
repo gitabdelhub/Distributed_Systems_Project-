@@ -1,12 +1,17 @@
 package com.monitor.server.rmi;
 
 import com.monitor.server.core.ConcurrentDataStore;
+import com.monitor.shared.model.Alert;
 import com.monitor.shared.model.MetricData;
 import com.monitor.shared.rmi.RMIMetricsService;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.*;
 
+/**
+ * Implémentation du service RMI — exposée aux clients desktop.
+ * Toutes les méthodes délèguent au ConcurrentDataStore singleton.
+ */
 public class RMIMetricsServiceImpl extends UnicastRemoteObject implements RMIMetricsService {
     private final ConcurrentDataStore store;
 
@@ -25,22 +30,27 @@ public class RMIMetricsServiceImpl extends UnicastRemoteObject implements RMIMet
         return new ArrayList<>(store.getAgentIds());
     }
 
-    // ⚠️ Méthodes avec implémentations minimales (sans @Override si signature incertaine)
-    
-    public List<MetricData> getHistory(String agentId) throws RemoteException {
-        // Retourne une liste vide si la méthode store.getHistory() n'existe pas
-        return new ArrayList<>();
-    }
-
+    @Override
     public MetricData getMetricsByAgent(String agentId) throws RemoteException {
-        var latest = store.getLatest();
-        return latest != null ? latest.get(agentId) : null;
+        return store.getLatest().get(agentId);
     }
 
+    @Override
+    public List<MetricData> getHistory(String agentId) throws RemoteException {
+        return new ArrayList<>(store.getHistory(agentId));
+    }
+
+    @Override
+    public List<Alert> getAlerts() throws RemoteException {
+        return store.getAlerts();
+    }
+
+    @Override
     public boolean registerAgent(String agentId) throws RemoteException {
-        return true;
+        return true; // enregistrement implicite lors de la 1ère métrique reçue
     }
 
+    @Override
     public boolean unregisterAgent(String agentId) throws RemoteException {
         return true;
     }
