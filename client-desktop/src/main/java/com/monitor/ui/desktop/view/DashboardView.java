@@ -137,6 +137,7 @@ public class DashboardView {
                         double v = Double.parseDouble(value.toString().replace(",", "."));
                         c.setBackground(v >= 85 ? COLOR_CRITICAL : v >= 60 ? COLOR_WARN : COLOR_OK);
                     } catch (NumberFormatException e) {
+                        System.err.println("[DashboardView] Valeur non numérique dans colonne " + col + " : " + value);
                         c.setBackground(Color.WHITE);
                     }
                 } else if (!isSelected) {

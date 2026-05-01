@@ -11,9 +11,14 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import java.util.List;
 
 /**
- * Configuration de Spring Security.
- * Tous les endpoints /api/** sont ouverts (pas d'auth HTTP requise).
- * CORS autorisé pour le client web React (localhost:5173).
+ * Configuration de Spring Security — MODE DÉMO ACADÉMIQUE.
+ *
+ * ⚠ AVERTISSEMENT PRODUCTION :
+ *   - La protection CSRF est désactivée (REST API stateless, acceptable pour une démo).
+ *   - CORS autorise tous les origins (à restreindre à l'URL du client en production).
+ * Pour un déploiement réel, activer CSRF, limiter les origins et sécuriser /api/auth/*.
+ *
+ * Tous les endpoints /api/** sont publics (pas d'auth HTTP requise pour la démo).
  */
 @Configuration
 @EnableWebSecurity

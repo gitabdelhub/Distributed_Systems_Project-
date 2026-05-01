@@ -2,7 +2,11 @@ package com.monitor.shared.constants;
 
 /**
  * Constantes unifiées du système (ports, seuils, intervalles).
- * Toujours alignées avec NetworkConstants pour éviter les conflits de ports.
+ * Toujours alignées avec {@link NetworkConstants} pour éviter les conflits de ports.
+ *
+ * @deprecated Préférer {@link NetworkConstants} pour les constantes réseau.
+ *             Cette classe est conservée pour la compatibilité avec les classes
+ *             existantes (ThresholdEngine, etc.) qui l'importent déjà.
  */
 public class Constants {
     public static final int UDP_PORT  = 5000;   // Port UDP métriques (agent → serveur)

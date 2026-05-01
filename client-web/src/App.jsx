@@ -119,8 +119,8 @@ export default function App() {
       a.download  = `metrics.${format}`;
       a.click();
       URL.revokeObjectURL(href);
-    } catch {
-      alert('Erreur lors de l\'export. Vérifiez que le serveur est démarré.');
+    } catch (err) {
+      alert('Erreur lors de l\'export : ' + (err.response?.statusText || err.message));
     }
   };
 

@@ -8,6 +8,7 @@ import com.monitor.shared.model.Alert;
 import com.monitor.shared.model.MetricData;
 import com.monitor.shared.utils.SerializationUtils;
 import java.net.*;
+import java.util.Arrays;
 
 /**
  * Listener UDP — reçoit les métriques envoyées par les agents (sérialisation Java).
@@ -29,8 +30,7 @@ public class UDPServer implements Runnable {
                 DatagramPacket packet = new DatagramPacket(buffer, buffer.length);
                 socket.receive(packet);
 
-                byte[] data = new byte[packet.getLength()];
-                System.arraycopy(packet.getData(), 0, data, 0, packet.getLength());
+                byte[] data = Arrays.copyOf(packet.getData(), packet.getLength());
 
                 MetricData metric = (MetricData) SerializationUtils.deserialize(data);
                 store.save(metric);
