@@ -5,7 +5,7 @@ import AgentChart from './components/AgentChart';
 import ThresholdConfig from './components/ThresholdConfig';
 import { fetchLatestMetrics, fetchAlerts, fetchAgents, exportFile, getThresholds, updateThresholds } from './api/api';
 
-const TABS = ['Overview', 'History', 'Alerts', 'Configuration'];
+const TABS = ['Vue d\'ensemble', 'Historique', 'Alertes', 'Configuration'];
 const REFRESH_INTERVAL = 5000;
 
 function ExportModal({ onClose, onConfirm }) {
@@ -14,14 +14,14 @@ function ExportModal({ onClose, onConfirm }) {
   return (
     <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
       <div className="bg-white rounded-lg shadow-xl p-6 w-80">
-        <h3 className="text-base font-semibold text-gray-800 mb-4">Admin Authentication</h3>
-        <label className="block text-sm text-gray-600 mb-1">Username</label>
+        <h3 className="text-base font-semibold text-gray-800 mb-4">Authentification Admin</h3>
+        <label className="block text-sm text-gray-600 mb-1">Nom d'utilisateur</label>
         <input
           className="w-full border rounded px-3 py-1.5 text-sm mb-3 focus:outline-none focus:ring-2 focus:ring-blue-400"
           value={user}
           onChange={e => setUser(e.target.value)}
         />
-        <label className="block text-sm text-gray-600 mb-1">Password</label>
+        <label className="block text-sm text-gray-600 mb-1">Mot de passe</label>
         <input
           type="password"
           className="w-full border rounded px-3 py-1.5 text-sm mb-4 focus:outline-none focus:ring-2 focus:ring-blue-400"
@@ -30,13 +30,13 @@ function ExportModal({ onClose, onConfirm }) {
         />
         <div className="flex justify-end gap-2">
           <button onClick={onClose} className="text-sm px-3 py-1.5 rounded border hover:bg-gray-50">
-            Cancel
+            Annuler
           </button>
           <button
             onClick={() => onConfirm(user, pass)}
             className="text-sm px-3 py-1.5 rounded bg-blue-600 text-white hover:bg-blue-700"
           >
-            Export
+            Exporter
           </button>
         </div>
       </div>
@@ -87,7 +87,7 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-slate-50">
       {exportModal && (
         <ExportModal
           onClose={() => setExportModal(null)}
@@ -96,25 +96,25 @@ export default function App() {
       )}
 
       {/* Header */}
-      <header className="bg-blue-700 text-white px-6 py-4 shadow">
+      <header className="bg-slate-800 text-white px-6 py-4 shadow-lg">
         <div className="flex items-center justify-between max-w-6xl mx-auto">
           <div>
-            <h1 className="text-xl font-bold">🌐 Système de Surveillance Distribué</h1>
-            <p className="text-blue-200 text-xs mt-0.5">
+            <h1 className="text-2xl font-bold">Système de Surveillance Distribué</h1>
+            <p className="text-slate-300 text-xs mt-1">
               {agents.length} agent(s) connecté(s)
-              {lastUpdate && ` · Mis à jour à ${lastUpdate.toLocaleTimeString()}`}
+              {lastUpdate && ` · Dernière mise à jour: ${lastUpdate.toLocaleTimeString()}`}
             </p>
           </div>
           <div className="flex gap-2">
             <button
               onClick={() => setExportModal('csv')}
-              className="bg-white text-blue-700 text-xs font-semibold px-3 py-1.5 rounded hover:bg-blue-50 transition"
+              className="bg-blue-600 text-white text-xs font-medium px-3 py-1.5 rounded hover:bg-blue-700 transition-colors"
             >
               📥 Export CSV
             </button>
             <button
               onClick={() => setExportModal('json')}
-              className="bg-white text-blue-700 text-xs font-semibold px-3 py-1.5 rounded hover:bg-blue-50 transition"
+              className="bg-emerald-600 text-white text-xs font-medium px-3 py-1.5 rounded hover:bg-emerald-700 transition-colors"
             >
               📥 Export JSON
             </button>
@@ -124,27 +124,27 @@ export default function App() {
 
       {/* Error banner */}
       {error && (
-        <div className="bg-red-100 border-l-4 border-red-500 text-red-700 px-6 py-3 text-sm max-w-6xl mx-auto mt-4 rounded">
+        <div className="bg-orange-50 border-l-4 border-orange-400 text-orange-800 px-6 py-3 text-sm max-w-6xl mx-auto mt-4 rounded">
           ⚠️ {error}
         </div>
       )}
 
       {/* Tabs */}
       <div className="max-w-6xl mx-auto px-6 mt-6">
-        <div className="flex gap-1 border-b border-gray-200">
+        <div className="flex gap-1 border-b border-slate-200">
           {TABS.map((t, i) => (
             <button
               key={t}
               onClick={() => setTab(i)}
-              className={`px-5 py-2.5 text-sm font-medium transition rounded-t ${
+              className={`px-5 py-2.5 text-sm font-medium transition-colors rounded-t ${
                 tab === i
-                  ? 'bg-white border border-b-0 border-gray-200 text-blue-700'
-                  : 'text-gray-500 hover:text-gray-700'
+                  ? 'bg-white border border-b-0 border-slate-200 text-blue-600 font-semibold'
+                  : 'text-slate-500 hover:text-slate-700 hover:bg-slate-100'
               }`}
             >
               {t}
               {t === 'Alertes' && alerts.length > 0 && (
-                <span className="ml-1.5 bg-red-500 text-white text-xs px-1.5 py-0.5 rounded-full">
+                <span className="ml-1.5 bg-orange-500 text-white text-xs px-1.5 py-0.5 rounded-full">
                   {alerts.length}
                 </span>
               )}
@@ -153,7 +153,7 @@ export default function App() {
         </div>
 
         {/* Tab content */}
-        <div className="bg-white border border-t-0 border-gray-200 rounded-b p-5 shadow-sm">
+        <div className="bg-white border border-t-0 border-slate-200 rounded-b p-5 shadow-sm">
           {tab === 0 && (
             <>
               <h2 className="text-base font-semibold text-gray-700">

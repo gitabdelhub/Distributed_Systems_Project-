@@ -1,4 +1,4 @@
-# 🌐 Système de Surveillance
+# 🌐 Système de Surveillance Distribué
 
 **Course:** Distributed Systems — **Academic Year:** 2025–2026  
 A real-time distributed platform for collecting, processing, and visualizing system metrics, managing alerts, and providing a modern MVC interface.
@@ -136,9 +136,15 @@ Distributed_Systems_Project-/
 ## ▶️ Complete Setup & Run Instructions
 
 ### 🚀 Step 1: Clone and Setup
-```bash
-git clone https://github.com/gitabdelhub/Distributed_Systems_Project-
-cd Distributed_Systems_Project-
+```powershell
+# Navigate to Downloads folder
+cd Downloads
+
+# Clone the project with a specific folder name
+git clone https://github.com/OualidDR/Distributed_Systems_Project- Distributed_Systems_Working_test
+
+# Enter the project folder
+cd Distributed_Systems_Working_test
 ```
 
 ### 🔧 Step 2: Build Dependencies
