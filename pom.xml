@@ -13,7 +13,6 @@
         <module>agent</module>
         <module>server</module>
         <module>client-desktop</module>
-        <module>client-web</module>
     </modules>
 
     <properties>
