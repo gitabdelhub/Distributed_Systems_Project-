@@ -7,6 +7,10 @@ package com.monitor.shared.constants;
  * @deprecated Préférer {@link NetworkConstants} pour les constantes réseau.
  *             Cette classe est conservée pour la compatibilité avec les classes
  *             existantes (ThresholdEngine, etc.) qui l'importent déjà.
+ *
+ *             ⚠ NOTE MIGRATION : les ports ont changé par rapport à l'ancienne version :
+ *             UDP 9000 → 5000, TCP 9001 → 6000. Mettez à jour agent.properties
+ *             si vous migrez depuis une ancienne configuration.
  */
 public class Constants {
     public static final int UDP_PORT  = 5000;   // Port UDP métriques (agent → serveur)

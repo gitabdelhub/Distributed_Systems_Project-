@@ -137,7 +137,12 @@ public class DashboardView {
                         double v = Double.parseDouble(value.toString().replace(",", "."));
                         c.setBackground(v >= 85 ? COLOR_CRITICAL : v >= 60 ? COLOR_WARN : COLOR_OK);
                     } catch (NumberFormatException e) {
-                        System.err.println("[DashboardView] Valeur non numérique dans colonne " + col + " : " + value);
+                        String agentId = row < metricsModel.getRowCount()
+                            ? (String) metricsModel.getValueAt(row, 0) : "?";
+                        System.err.println("[DashboardView] Valeur non numérique"
+                            + " ligne=" + row + " col=" + col
+                            + " agentId=" + agentId
+                            + " valeur=" + value);
                         c.setBackground(Color.WHITE);
                     }
                 } else if (!isSelected) {
