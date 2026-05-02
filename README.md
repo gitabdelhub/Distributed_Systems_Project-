@@ -52,4 +52,61 @@ The system follows a **three-tier distributed architecture**:
 
 ## 📂 Project Structure
 
+```
+Distributed_Systems_Project-/
+├── shared/                          # Shared models, constants, and utilities
+│   └── src/main/java/com/monitor/shared/
+│       ├── model/                   # MetricData, Alert, User, Role, AgentStatus
+│       ├── rmi/                     # RMIMetricsService interface
+│       ├── constants/               # NetworkConstants, ThresholdConstants
+│       └── utils/                   # Logger, SerializationUtils
+│
+├── agent/                           # Monitoring Agent (UDP sender, TCP alert client)
+│   └── src/main/java/com/monitor/agent/
+│       ├── core/                    # AgentMain, MonitoringAgent, SystemMetricsCollector
+│       ├── network/                 # UDPSender, TCPAlertClient
+│       └── threads/                 # MetricPublisherTask (scheduled collection)
+│
+├── server/                          # Central Server (Spring Boot)
+│   └── src/main/java/com/monitor/server/
+│       ├── core/                    # ServerMain, ConcurrentDataStore
+│       ├── network/                 # UDPServer, TCPServer
+│       ├── alerting/                # ThresholdEngine, AlertDispatcher
+│       ├── rmi/                     # RMIServer, RMIMetricsServiceImpl
+│       ├── rest/                    # MetricsController, AdminController
+│       ├── storage/                 # MetricsRepository (H2), MetricsExporter (CSV/JSON)
+│       ├── security/                # AuthService
+│       └── config/                  # SecurityConfig, ServerInitializer
+│
+├── client-desktop/                  # Desktop Client (Swing + RMI + REST)
+│   └── src/main/java/com/monitor/ui/desktop/
+│       ├── main/                    # DesktopApp entry point
+│       ├── controller/              # DashboardController
+│       ├── view/                    # DashboardView (Swing tabs)
+│       └── rmi/                     # RMIServiceProxy
+│
+├── client-web/                      # Web Client (React + Vite + Tailwind)
+│   ├── src/
+│   │   ├── main.jsx                 # React entry point
+│   │   ├── App.jsx                  # Tabbed dashboard (Metrics / History / Alerts)
+│   │   ├── api/api.js               # Axios REST calls
+│   │   └── components/
+│   │       ├── MetricsTable.jsx     # Live metrics with color-coded badges
+│   │       ├── AlertsTable.jsx      # Alerts with severity coloring
+│   │       └── AgentChart.jsx       # Recharts line chart for history
+│   └── index.html
+│
+├── docs/                            # Architecture docs & UML diagrams
+│   ├── architecture.md
+│   ├── guide-utilisation.md
+│   └── uml/                         # PlantUML diagram images
+│
+├── scripts/                         # Helper shell scripts
+│   ├── build-all.sh
+│   ├── start-server.sh
+│   ├── start-agent.sh
+│   └── run-tests.sh
+│
+└── pom.xml                          # Maven multi-module root
+```
 
