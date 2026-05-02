@@ -1,55 +1,97 @@
 # 🌐 Distributed Monitoring System
 
-> **Course:** Distributed Systems | **Academic Year:** 2025-2026  
-> A real-time distributed platform for collecting, processing, and visualizing system metrics, managing alerts, and providing a modern MVC interface.
+**Course:** Distributed Systems — **Academic Year:** 2025–2026  
+A real-time distributed platform for collecting, processing, and visualizing system metrics, managing alerts, and providing a modern MVC interface.
 
 ---
 
-##  Context & Pedagogical Objectives
-Monitoring distributed systems requires tools capable of collecting, processing, and visualizing real-time data from multiple remote machines. This project aims to design a distributed platform that demonstrates core concepts in distributed computing while delivering a functional monitoring solution.
+## 🎯 Context & Learning Objectives
+This project demonstrates a complete distributed system with real-time monitoring.
 
-**Key Learning Objectives:**
-- ✅ Implement a complete distributed architecture
-- ✅ Apply multi-threading, TCP/UDP networking, and Java RMI
-- ✅ Design a modern graphical interface following the MVC pattern
-- ✅ Understand Backend/Frontend separation and Client/Server principles
-- ✅ Manage concurrency, data persistence, and real-time communication
+**Objectives**
+- Implement a distributed architecture (Agent → Server → Client)
+- Use multi-threading, TCP/UDP networking, and Java RMI
+- Build a modern UI with MVC principles
+- Separate backend and frontend responsibilities
+- Handle concurrency, persistence, and real-time updates
 
 ---
 
 ## 🏗️ System Architecture
-The system follows a **three-tier distributed architecture**:
 
 | Component | Role | Communication |
-|-----------|------|---------------|
-| **🖥️ Monitoring Agent** | Collects CPU, RAM, and Disk metrics periodically on target machines | Sends metrics via **UDP**, critical alerts via **TCP** |
-| **🌐 Central Server** | Aggregates data, manages agents, evaluates thresholds, exposes services | Listens to UDP/TCP, provides **RMI** & **REST** endpoints, stores metrics |
-| **📱 Client Interface** | Visualizes data, configures thresholds, manages users & exports | Desktop: **RMI** (Swing/JavaFX) \| Web: **REST** (Angular/React/Vue) |
+|----------|------|---------------|
+| **Monitoring Agent** | Collects CPU/RAM/Disk metrics | UDP for metrics, TCP for critical alerts |
+| **Central Server** | Aggregates data, manages agents, evaluates thresholds | UDP/TCP listeners, RMI services, REST API |
+| **Client UI** | Visualizes data and alerts, export, configuration | Web (REST) and/or Desktop (RMI) |
 
 ---
 
-## 📋 Key Features
-| Feature | Description |
-|---------|-------------|
-| 📈 **History & Statistics** | Store and analyze metrics over time to identify trends, peaks, and performance patterns |
-| 🚨 **Configurable Alerts** | Define custom thresholds that automatically trigger critical notifications |
-|  **Filtering & Search** | Efficiently manage large agent fleets with dynamic sorting, filtering, and search |
-| 👥 **User Management** | Secure access with authentication, role-based permissions (Admin/Observer) |
-| 📤 **Data Export** | Extract metrics and reports in CSV/JSON formats for external analysis |
+## ✅ Key Features
+
+- **Real-time Metrics** (CPU / RAM / Disk)
+- **History & Statistics**
+- **Configurable Alerts**
+- **Filtering & Search**
+- **User Management** (Admin / Observer)
+- **Export CSV / JSON**
 
 ---
 
-## ️ Technology Stack
+## 🧰 Tech Stack
+
 | Layer | Technologies |
-|-------|--------------|
-| **Core** | Java 17+, Maven Multi-Module, Threads, `java.net`, `java.rmi` |
-| **Server** | UDP/TCP Listeners, RMI Registry, Spring Boot/JAX-RS (REST), H2/PostgreSQL |
-| **UI Option 1** | JavaFX or Swing, RMI Client, MVC Pattern |
-| **UI Option 2** | Angular / React / Vue, TypeScri`pt, REST API, WebSocket (optional) |
-| **Tools** | Git, PlantUML/Mermaid, Docker (optional), JUnit |
+|------|--------------|
+| **Core** | Java 17, Maven, Threads, `java.net`, `java.rmi` |
+| **Server** | Spring Boot, UDP/TCP, RMI, H2 |
+| **Client (Web)** | Vite + (React/Vue/Angular) |
+| **Tools** | Git, JUnit, Mermaid/PlantUML |
 
 ---
 
 ## 📂 Project Structure
+
+```
+Distributed_Systems_Project-/
+├─ server/              # Spring Boot server (REST + RMI + UDP/TCP)
+├─ agent/               # Monitoring agent
+├─ client-web/          # Web UI
+└─ scripts/             # Start scripts
+```
+
+---
+
+## ▶️ How to Run
+
+### 1) Server
+```powershell
+cd Distributed_Systems_Project-
+mvn --% -f server\pom.xml spring-boot:run -Dspring-boot.run.mainClass=com.monitor.server.core.ServerMain -Dspring-boot.run.arguments="--spring.autoconfigure.exclude=org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration"
+```
+
+### 2) Agent
+```bash
+./scripts/start-agent.sh
+```
+
+### 3) Web UI
+```powershell
+cd client-web
+npm install
+npm run dev
+```
+
+---
+
+## 📸 Screenshots (Recommended)
+Include at least one screenshot of the dashboard.
+
+Example:
+```
+![Dashboard](docs/screenshots/dashboard1.png)
+![Dashboard](docs/screenshots/dashboard2.png)
+```
+
+---
 
 
