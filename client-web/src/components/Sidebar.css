@@ -1,0 +1,89 @@
+.sidebar {
+  width: 300px;
+  background: white;
+  border-right: 1px solid #e5e7eb;
+  overflow-y: auto;
+}
+
+.sidebar-header {
+  padding: 20px;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.sidebar-header h2 {
+  color: #1f2937;
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin: 0;
+}
+
+.agent-list {
+  padding: 10px 0;
+}
+
+.agent-item {
+  padding: 15px 20px;
+  border-bottom: 1px solid #f3f4f6;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.agent-item:hover {
+  background-color: #f9fafb;
+}
+
+.agent-item.active {
+  background-color: #eff6ff;
+  border-left: 3px solid #3b82f6;
+}
+
+.agent-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.agent-name {
+  font-weight: 600;
+  color: #1f2937;
+}
+
+.agent-status {
+  display: flex;
+  align-items: center;
+  font-size: 0.875rem;
+  color: #6b7280;
+}
+
+.status-indicator {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  margin-right: 6px;
+}
+
+.status-indicator.ONLINE {
+  background-color: #10b981;
+}
+
+.status-indicator.OFFLINE {
+  background-color: #ef4444;
+}
+
+.status-indicator.WARNING {
+  background-color: #f59e0b;
+}
+
+.agent-metrics {
+  display: flex;
+  gap: 15px;
+  font-size: 0.75rem;
+  color: #6b7280;
+}
+
+.metric {
+  padding: 2px 6px;
+  background-color: #f3f4f6;
+  border-radius: 4px;
+}

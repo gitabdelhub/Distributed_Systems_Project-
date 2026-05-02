@@ -1,0 +1,80 @@
+.alerts-panel {
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.no-alerts {
+  text-align: center;
+  padding: 40px;
+  color: #6b7280;
+}
+
+.alerts-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.alert-item {
+  padding: 12px;
+  border-radius: 6px;
+  border-left: 4px solid;
+}
+
+.alert-item.severity-critical {
+  background-color: #fef2f2;
+  border-left-color: #ef4444;
+}
+
+.alert-item.severity-warning {
+  background-color: #fffbeb;
+  border-left-color: #f59e0b;
+}
+
+.alert-item.severity-info {
+  background-color: #eff6ff;
+  border-left-color: #3b82f6;
+}
+
+.alert-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.alert-severity {
+  font-weight: 600;
+  font-size: 0.875rem;
+}
+
+.alert-item.severity-critical .alert-severity {
+  color: #dc2626;
+}
+
+.alert-item.severity-warning .alert-severity {
+  color: #d97706;
+}
+
+.alert-item.severity-info .alert-severity {
+  color: #2563eb;
+}
+
+.alert-timestamp {
+  font-size: 0.75rem;
+  color: #6b7280;
+}
+
+.alert-content {
+  font-size: 0.875rem;
+}
+
+.alert-agent {
+  font-weight: 500;
+  color: #1f2937;
+  margin-bottom: 4px;
+}
+
+.alert-message {
+  color: #4b5563;
+}
