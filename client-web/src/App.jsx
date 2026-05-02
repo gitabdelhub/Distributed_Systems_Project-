@@ -1,107 +1,11 @@
-<<<<<<< HEAD
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import Header from './components/Header';
-import NavigationTabs from './components/NavigationTabs';
-import MetricsTable from './components/MetricsTable';
-import AlertsSection from './components/AlertsSection';
-import Footer from './components/Footer';
-import './App.css';
-
-function App() {
-  const [metrics, setMetrics] = useState([]);
-  const [alerts, setAlerts] = useState([]);
-  const [activeTab, setActiveTab] = useState('overview');
-  const [lastUpdate, setLastUpdate] = useState(new Date().toLocaleTimeString('fr-FR'));
-
-  useEffect(() => {
-    // Fetch initial data
-    fetchData();
-    
-    // Set up polling for real-time updates
-    const interval = setInterval(() => {
-      fetchData();
-      setLastUpdate(new Date().toLocaleTimeString('fr-FR'));
-    }, 5000);
-
-    return () => clearInterval(interval);
-  }, []);
-
-  const fetchData = async () => {
-    try {
-      // Simulate data for now - replace with actual API calls
-      const mockMetrics = [
-        {
-          agentId: '4ccdcd67-1234-5678-9abc-123456789def',
-          cpu: 10.2,
-          ram: 86.0,
-          disk: 87.7,
-          timestamp: new Date()
-        },
-        {
-          agentId: 'a1b2c3d4-5678-90ab-cdef-1234567890ab',
-          cpu: 45.5,
-          ram: 62.3,
-          disk: 45.8,
-          timestamp: new Date()
-        }
-      ];
-      
-      const mockAlerts = [
-        {
-          severity: 'warning',
-          agentId: '4ccdcd67-1234',
-          message: 'Utilisation RAM élevée sur l\'agent',
-          timestamp: '16:49:23'
-        },
-        {
-          severity: 'critical',
-          agentId: 'a1b2c3d4-5678',
-          message: 'Espace disque critique',
-          timestamp: '16:48:15'
-        }
-      ];
-      
-      setMetrics(mockMetrics);
-      setAlerts(mockAlerts);
-    } catch (error) {
-      console.error('Error fetching data:', error);
-    }
-  };
-
-  const agentCount = new Set(metrics.map(m => m.agentId)).size;
-
-  return (
-    <div className="app">
-      <Header agentCount={agentCount} lastUpdate={lastUpdate} />
-      <NavigationTabs 
-        activeTab={activeTab} 
-        onTabChange={setActiveTab} 
-        alertCount={alerts.length} 
-      />
-      <main className="main-content">
-        {activeTab === 'overview' && (
-          <MetricsTable metrics={metrics} />
-        )}
-        {activeTab === 'history' && (
-          <div className="history-section">
-            <h2>Historique</h2>
-            <p>Fonctionnalité d'historique en cours de développement...</p>
-          </div>
-        )}
-        {activeTab === 'alerts' && (
-          <AlertsSection alerts={alerts} />
-        )}
-      </main>
-      <Footer />
-=======
 import React, { useState, useEffect, useCallback } from 'react';
 import MetricsTable from './components/MetricsTable';
 import AlertsTable from './components/AlertsTable';
 import AgentChart from './components/AgentChart';
-import { fetchLatestMetrics, fetchAlerts, fetchAgents, exportFile } from './api/api';
+import ThresholdConfig from './components/ThresholdConfig';
+import { fetchLatestMetrics, fetchAlerts, fetchAgents, exportFile, getThresholds, updateThresholds } from './api/api';
 
-const TABS = ['Vue générale', 'Historique', 'Alertes'];
+const TABS = ['Overview', 'History', 'Alerts', 'Configuration'];
 const REFRESH_INTERVAL = 5000;
 
 function ExportModal({ onClose, onConfirm }) {
@@ -110,14 +14,14 @@ function ExportModal({ onClose, onConfirm }) {
   return (
     <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
       <div className="bg-white rounded-lg shadow-xl p-6 w-80">
-        <h3 className="text-base font-semibold text-gray-800 mb-4">Authentification Admin</h3>
-        <label className="block text-sm text-gray-600 mb-1">Nom d'utilisateur</label>
+        <h3 className="text-base font-semibold text-gray-800 mb-4">Admin Authentication</h3>
+        <label className="block text-sm text-gray-600 mb-1">Username</label>
         <input
           className="w-full border rounded px-3 py-1.5 text-sm mb-3 focus:outline-none focus:ring-2 focus:ring-blue-400"
           value={user}
           onChange={e => setUser(e.target.value)}
         />
-        <label className="block text-sm text-gray-600 mb-1">Mot de passe</label>
+        <label className="block text-sm text-gray-600 mb-1">Password</label>
         <input
           type="password"
           className="w-full border rounded px-3 py-1.5 text-sm mb-4 focus:outline-none focus:ring-2 focus:ring-blue-400"
@@ -126,24 +30,20 @@ function ExportModal({ onClose, onConfirm }) {
         />
         <div className="flex justify-end gap-2">
           <button onClick={onClose} className="text-sm px-3 py-1.5 rounded border hover:bg-gray-50">
-            Annuler
+            Cancel
           </button>
           <button
             onClick={() => onConfirm(user, pass)}
             className="text-sm px-3 py-1.5 rounded bg-blue-600 text-white hover:bg-blue-700"
           >
-            Exporter
+            Export
           </button>
         </div>
       </div>
->>>>>>> 571da7956945e98c1c15a481251ea9217044e674
     </div>
   );
 }
 
-<<<<<<< HEAD
-export default App;
-=======
 export default function App() {
   const [tab, setTab] = useState(0);
   const [metrics, setMetrics] = useState({});
@@ -153,6 +53,11 @@ export default function App() {
   const [lastUpdate, setLastUpdate] = useState(null);
   const [error, setError] = useState(null);
   const [exportModal, setExportModal] = useState(null); // 'csv' | 'json' | null
+  const [thresholds, setThresholds] = useState({
+    cpu: { warning: 70, critical: 85 },
+    ram: { warning: 75, critical: 90 },
+    disk: { warning: 80, critical: 95 }
+  });
 
   const loadData = useCallback(() => {
     Promise.all([fetchLatestMetrics(), fetchAlerts(), fetchAgents()])
@@ -293,6 +198,15 @@ export default function App() {
               <AlertsTable alerts={alerts} />
             </>
           )}
+
+          {tab === 3 && (
+            <>
+              <h2 className="text-base font-semibold text-gray-700">
+                Configuration des Seuils d'Alertes
+              </h2>
+              <ThresholdConfig onThresholdsChange={setThresholds} />
+            </>
+          )}
         </div>
       </div>
 
@@ -303,4 +217,3 @@ export default function App() {
     </div>
   );
 }
->>>>>>> 571da7956945e98c1c15a481251ea9217044e674

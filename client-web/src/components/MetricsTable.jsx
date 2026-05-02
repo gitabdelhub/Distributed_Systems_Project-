@@ -1,73 +1,4 @@
-import React from 'react';
-<<<<<<< HEAD
-import './MetricsTable.css';
-
-const MetricsTable = ({ metrics }) => {
-  const getUsageColor = (value) => {
-    if (value < 30) return 'low';
-    if (value < 70) return 'medium';
-    return 'high';
-  };
-
-  const formatAgentId = (id) => {
-    if (!id) return 'N/A';
-    return id.length > 8 ? id.substring(0, 8) + '...' : id;
-  };
-
-  const formatTime = (timestamp) => {
-    if (!timestamp) return 'N/A';
-    return new Date(timestamp).toLocaleTimeString('fr-FR', { 
-      hour: '2-digit', 
-      minute: '2-digit', 
-      second: '2-digit' 
-    });
-  };
-
-  return (
-    <div className="metrics-table-container">
-      <h2>Métriques en temps réel</h2>
-      <div className="table-wrapper">
-        <table className="metrics-table">
-          <thead>
-            <tr>
-              <th>AGENT ID</th>
-              <th>CPU</th>
-              <th>RAM</th>
-              <th>DISQUE</th>
-              <th>DERNIÈRE MISE À JOUR</th>
-            </tr>
-          </thead>
-          <tbody>
-            {metrics.length === 0 ? (
-              <tr>
-                <td colSpan="5" className="no-data">Aucune donnée disponible</td>
-              </tr>
-            ) : (
-              metrics.map((metric, index) => (
-                <tr key={index}>
-                  <td className="agent-id">{formatAgentId(metric.agentId)}</td>
-                  <td className={`usage ${getUsageColor(metric.cpu)}`}>
-                    {metric.cpu.toFixed(1)}%
-                  </td>
-                  <td className={`usage ${getUsageColor(metric.ram)}`}>
-                    {metric.ram.toFixed(1)}%
-                  </td>
-                  <td className={`usage ${getUsageColor(metric.disk)}`}>
-                    {metric.disk.toFixed(1)}%
-                  </td>
-                  <td className="timestamp">{formatTime(metric.timestamp)}</td>
-                </tr>
-              ))
-            )}
-          </tbody>
-        </table>
-      </div>
-    </div>
-  );
-};
-
-export default MetricsTable;
-=======
+import React, { useState, useMemo } from 'react';
 import { CPU_CRITICAL, RAM_CRITICAL, DISK_CRITICAL } from '../constants';
 
 function badgeColor(value, critical) {
@@ -87,47 +18,215 @@ function MetricBadge({ value, critical }) {
 }
 
 export default function MetricsTable({ metrics }) {
-  const rows = Object.values(metrics);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [filterStatus, setFilterStatus] = useState('all');
+  const [sortBy, setSortBy] = useState('agentId');
+  const [sortOrder, setSortOrder] = useState('asc');
 
-  if (rows.length === 0) {
+  const rows = useMemo(() => {
+    let filtered = Object.values(metrics);
+
+    // Apply search filter
+    if (searchTerm) {
+      filtered = filtered.filter(m => 
+        m.agentId.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+    }
+
+    // Apply status filter
+    if (filterStatus !== 'all') {
+      filtered = filtered.filter(m => {
+        const cpuStatus = m.cpuUsage >= CPU_CRITICAL ? 'critical' : m.cpuUsage >= CPU_CRITICAL * 0.8 ? 'warning' : 'normal';
+        const ramStatus = m.ramUsage >= RAM_CRITICAL ? 'critical' : m.ramUsage >= RAM_CRITICAL * 0.8 ? 'warning' : 'normal';
+        const diskStatus = m.diskUsage >= DISK_CRITICAL ? 'critical' : m.diskUsage >= DISK_CRITICAL * 0.8 ? 'warning' : 'normal';
+        
+        if (filterStatus === 'critical') {
+          return cpuStatus === 'critical' || ramStatus === 'critical' || diskStatus === 'critical';
+        } else if (filterStatus === 'warning') {
+          return cpuStatus === 'warning' || ramStatus === 'warning' || diskStatus === 'warning';
+        } else if (filterStatus === 'normal') {
+          return cpuStatus === 'normal' && ramStatus === 'normal' && diskStatus === 'normal';
+        }
+        return true;
+      });
+    }
+
+    // Apply sorting
+    filtered.sort((a, b) => {
+      let aValue, bValue;
+      
+      switch (sortBy) {
+        case 'agentId':
+          aValue = a.agentId;
+          bValue = b.agentId;
+          break;
+        case 'cpu':
+          aValue = a.cpuUsage;
+          bValue = b.cpuUsage;
+          break;
+        case 'ram':
+          aValue = a.ramUsage;
+          bValue = b.ramUsage;
+          break;
+        case 'disk':
+          aValue = a.diskUsage;
+          bValue = b.diskUsage;
+          break;
+        case 'timestamp':
+          aValue = new Date(a.timestamp);
+          bValue = new Date(b.timestamp);
+          break;
+        default:
+          aValue = a.agentId;
+          bValue = b.agentId;
+      }
+
+      if (aValue < bValue) return sortOrder === 'asc' ? -1 : 1;
+      if (aValue > bValue) return sortOrder === 'asc' ? 1 : -1;
+      return 0;
+    });
+
+    return filtered;
+  }, [metrics, searchTerm, filterStatus, sortBy, sortOrder]);
+
+  const handleSort = (column) => {
+    if (sortBy === column) {
+      setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc');
+    } else {
+      setSortBy(column);
+      setSortOrder('asc');
+    }
+  };
+
+  if (rows.length === 0 && Object.keys(metrics).length === 0) {
     return <p className="text-gray-500 text-sm mt-4">Aucun agent connecté.</p>;
   }
 
   return (
-    <div className="overflow-x-auto mt-4">
-      <table className="min-w-full text-sm border rounded-lg overflow-hidden">
-        <thead className="bg-gray-100 text-left text-gray-700 uppercase text-xs">
-          <tr>
-            <th className="px-4 py-3">Agent ID</th>
-            <th className="px-4 py-3">CPU</th>
-            <th className="px-4 py-3">RAM</th>
-            <th className="px-4 py-3">Disque</th>
-            <th className="px-4 py-3">Dernière mise à jour</th>
-          </tr>
-        </thead>
-        <tbody className="divide-y divide-gray-200">
-          {rows.map(m => (
-            <tr key={m.agentId} className="hover:bg-gray-50">
-              <td className="px-4 py-2 font-mono text-xs text-gray-600">
-                {m.agentId.substring(0, 8)}…
-              </td>
-              <td className="px-4 py-2">
-                <MetricBadge value={m.cpuUsage} critical={CPU_CRITICAL} />
-              </td>
-              <td className="px-4 py-2">
-                <MetricBadge value={m.ramUsage} critical={RAM_CRITICAL} />
-              </td>
-              <td className="px-4 py-2">
-                <MetricBadge value={m.diskUsage} critical={DISK_CRITICAL} />
-              </td>
-              <td className="px-4 py-2 text-gray-500">
-                {new Date(m.timestamp).toLocaleTimeString()}
-              </td>
+    <div className="mt-4">
+      {/* Filters and Search */}
+      <div className="bg-gray-50 p-4 rounded-lg border mb-4">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+          {/* Search */}
+          <div className="md:col-span-2">
+            <label className="block text-sm font-medium text-gray-700 mb-1">Recherche par Agent ID</label>
+            <input
+              type="text"
+              placeholder="Rechercher un agent..."
+              className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
+          </div>
+          
+          {/* Status Filter */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Filtrer par statut</label>
+            <select
+              className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              value={filterStatus}
+              onChange={(e) => setFilterStatus(e.target.value)}
+            >
+              <option value="all">Tous</option>
+              <option value="normal">Normal</option>
+              <option value="warning">Avertissement</option>
+              <option value="critical">Critique</option>
+            </select>
+          </div>
+
+          {/* Sort */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Trier par</label>
+            <select
+              className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              value={sortBy}
+              onChange={(e) => setSortBy(e.target.value)}
+            >
+              <option value="agentId">Agent ID</option>
+              <option value="cpu">CPU</option>
+              <option value="ram">RAM</option>
+              <option value="disk">Disque</option>
+              <option value="timestamp">Dernière mise à jour</option>
+            </select>
+          </div>
+        </div>
+
+        {/* Results count */}
+        <div className="mt-3 text-sm text-gray-600">
+          {rows.length} agent{rows.length > 1 ? 's' : ''} trouvé{rows.length > 1 ? 's' : ''}
+          {searchTerm && ` pour "${searchTerm}"`}
+          {filterStatus !== 'all' && ` avec statut "${filterStatus}"`}
+        </div>
+      </div>
+
+      {/* Table */}
+      <div className="overflow-x-auto">
+        <table className="min-w-full text-sm border rounded-lg overflow-hidden">
+          <thead className="bg-gray-100 text-left text-gray-700 uppercase text-xs">
+            <tr>
+              <th 
+                className="px-4 py-3 cursor-pointer hover:bg-gray-200"
+                onClick={() => handleSort('agentId')}
+              >
+                Agent ID {sortBy === 'agentId' && (sortOrder === 'asc' ? '↑' : '↓')}
+              </th>
+              <th 
+                className="px-4 py-3 cursor-pointer hover:bg-gray-200"
+                onClick={() => handleSort('cpu')}
+              >
+                CPU {sortBy === 'cpu' && (sortOrder === 'asc' ? '↑' : '↓')}
+              </th>
+              <th 
+                className="px-4 py-3 cursor-pointer hover:bg-gray-200"
+                onClick={() => handleSort('ram')}
+              >
+                RAM {sortBy === 'ram' && (sortOrder === 'asc' ? '↑' : '↓')}
+              </th>
+              <th 
+                className="px-4 py-3 cursor-pointer hover:bg-gray-200"
+                onClick={() => handleSort('disk')}
+              >
+                Disque {sortBy === 'disk' && (sortOrder === 'asc' ? '↑' : '↓')}
+              </th>
+              <th 
+                className="px-4 py-3 cursor-pointer hover:bg-gray-200"
+                onClick={() => handleSort('timestamp')}
+              >
+                Dernière mise à jour {sortBy === 'timestamp' && (sortOrder === 'asc' ? '↑' : '↓')}
+              </th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody className="divide-y divide-gray-200">
+            {rows.length === 0 ? (
+              <tr>
+                <td colSpan="5" className="px-4 py-8 text-center text-gray-500">
+                  Aucun agent trouvé pour les filtres sélectionnés
+                </td>
+              </tr>
+            ) : (
+              rows.map(m => (
+                <tr key={m.agentId} className="hover:bg-gray-50">
+                  <td className="px-4 py-2 font-mono text-xs text-gray-600">
+                    {m.agentId.substring(0, 8)}…
+                  </td>
+                  <td className="px-4 py-2">
+                    <MetricBadge value={m.cpuUsage} critical={CPU_CRITICAL} />
+                  </td>
+                  <td className="px-4 py-2">
+                    <MetricBadge value={m.ramUsage} critical={RAM_CRITICAL} />
+                  </td>
+                  <td className="px-4 py-2">
+                    <MetricBadge value={m.diskUsage} critical={DISK_CRITICAL} />
+                  </td>
+                  <td className="px-4 py-2 text-gray-500">
+                    {new Date(m.timestamp).toLocaleTimeString()}
+                  </td>
+                </tr>
+              ))
+            )}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 }
->>>>>>> 571da7956945e98c1c15a481251ea9217044e674

@@ -27,3 +27,9 @@ export const exportFile = (type, user, pass) =>
     a.click();
     URL.revokeObjectURL(url);
   });
+
+export const getThresholds = () =>
+  axios.get(`${BASE}/thresholds`).then(r => r.data);
+
+export const updateThresholds = (thresholds) =>
+  axios.put(`${BASE}/thresholds`, thresholds).then(r => r.data);
