@@ -25,10 +25,10 @@ public class RMIMetricsServiceImpl extends UnicastRemoteObject implements RMIMet
         return new ArrayList<>(store.getAgentIds());
     }
 
-    // ⚠️ Méthodes avec implémentations minimales (sans @Override si signature incertaine)
+    // Methods with minimal implementations
     
     public List<MetricData> getHistory(String agentId) throws RemoteException {
-        // Retourne une liste vide si la méthode store.getHistory() n'existe pas
+        // Return empty list if store.getHistory() method doesn't exist
         return new ArrayList<>();
     }
 
