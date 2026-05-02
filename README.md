@@ -80,17 +80,11 @@ cd client-web
 npm install
 npm run dev
 ```
-
----
-
-## 📸 Screenshots 
-
-Example:
 ```
+## 📸 Screenshots
+
 ![Dashboard](docs/screenshots/dashboard1.png)
 ![Dashboard](docs/screenshots/dashboard2.png)
-```
-
 ---
 
 
