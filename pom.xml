@@ -10,6 +10,7 @@
     </parent>
     <artifactId>agent</artifactId>
 
+<<<<<<< HEAD
     <dependencies>
         <!-- Module shared -->
         <dependency>
@@ -52,5 +53,44 @@
                 </executions>
             </plugin>
         </plugins>
+=======
+    <modules>
+        <module>shared</module>
+        <module>agent</module>
+        <module>server</module>
+        <module>client-desktop</module>
+        <module>client-web</module>
+    </modules>
+
+    <properties>
+        <java.version>17</java.version>
+        <maven.compiler.source>17</maven.compiler.source>
+        <maven.compiler.target>17</maven.compiler.target>
+        <spring-boot.version>3.2.0</spring-boot.version>
+    </properties>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-dependencies</artifactId>
+                <version>${spring-boot.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-maven-plugin</artifactId>
+                    <version>${spring-boot.version}</version>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+>>>>>>> 571da7956945e98c1c15a481251ea9217044e674
     </build>
 </project>

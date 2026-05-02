@@ -1,5 +1,10 @@
 package com.monitor.shared.constants;
 
+/**
+ * General application constants.
+ * Port constants are defined in {@link NetworkConstants}.
+ * Threshold constants are defined in {@link ThresholdConstants}.
+ */
 public class Constants {
     public static final int UDP_PORT = NetworkConstants.PORT_UDP;
     public static final int TCP_PORT = NetworkConstants.PORT_TCP;

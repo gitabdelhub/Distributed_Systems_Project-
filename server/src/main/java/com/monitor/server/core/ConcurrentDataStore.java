@@ -23,8 +23,12 @@ public class ConcurrentDataStore {
     }
 
     public Map<String, MetricData> getLatest() {
-        Map<String, MetricData> latest = new HashMap<>();
-        metrics.forEach((id, list) -> { if (!list.isEmpty()) latest.put(id, list.get(list.size() - 1)); });
+        Map<String, MetricData> latest = new ConcurrentHashMap<>();
+        metrics.forEach((id, list) -> {
+            synchronized (list) {
+                if (!list.isEmpty()) latest.put(id, list.get(list.size() - 1));
+            }
+        });
         return latest;
     }
 

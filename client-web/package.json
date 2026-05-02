@@ -7,7 +7,10 @@
     "preview": "vite preview"
   },
   "dependencies": {
+<<<<<<< HEAD
     "autoprefixer": "^10.5.0",
+=======
+>>>>>>> 571da7956945e98c1c15a481251ea9217044e674
     "axios": "^1.6.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
@@ -15,6 +18,10 @@
   },
   "devDependencies": {
     "@vitejs/plugin-react": "^4.0.0",
+<<<<<<< HEAD
+=======
+    "autoprefixer": "^10.5.0",
+>>>>>>> 571da7956945e98c1c15a481251ea9217044e674
     "tailwindcss": "^3.4.0",
     "vite": "^5.0.0"
   }

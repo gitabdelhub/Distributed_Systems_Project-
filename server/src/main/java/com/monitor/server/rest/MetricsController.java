@@ -8,7 +8,6 @@ import java.util.*;
 
 @RestController
 @RequestMapping("/api")
-@CrossOrigin(origins = "*")
 public class MetricsController {
     private final ConcurrentDataStore store = ConcurrentDataStore.getInstance();
 

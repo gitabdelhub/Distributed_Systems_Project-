@@ -1,6 +1,7 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+<<<<<<< HEAD
 
 body {
   margin: 0;
@@ -25,3 +26,5 @@ code {
   flex: 1;
   overflow-y: auto;
 }
+=======
+>>>>>>> 571da7956945e98c1c15a481251ea9217044e674

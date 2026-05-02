@@ -25,6 +25,7 @@ public class RMIMetricsServiceImpl extends UnicastRemoteObject implements RMIMet
         return new ArrayList<>(store.getAgentIds());
     }
 
+<<<<<<< HEAD
     // Methods with minimal implementations
     
     public List<MetricData> getHistory(String agentId) throws RemoteException {
@@ -32,15 +33,19 @@ public class RMIMetricsServiceImpl extends UnicastRemoteObject implements RMIMet
         return new ArrayList<>();
     }
 
+=======
+    @Override
+>>>>>>> 571da7956945e98c1c15a481251ea9217044e674
     public MetricData getMetricsByAgent(String agentId) throws RemoteException {
-        var latest = store.getLatest();
-        return latest != null ? latest.get(agentId) : null;
+        return store.getLatest().get(agentId);
     }
 
+    @Override
     public boolean registerAgent(String agentId) throws RemoteException {
         return true;
     }
 
+    @Override
     public boolean unregisterAgent(String agentId) throws RemoteException {
         return true;
     }
