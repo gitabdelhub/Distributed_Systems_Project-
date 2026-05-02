@@ -83,8 +83,7 @@ npm run dev
 
 ---
 
-## 📸 Screenshots (Recommended)
-Include at least one screenshot of the dashboard.
+## 📸 Screenshots 
 
 Example:
 ```
