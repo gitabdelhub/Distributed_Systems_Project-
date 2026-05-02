@@ -1,55 +1,197 @@
 # 🌐 Distributed Monitoring System
 
-> **Course:** Distributed Systems | **Academic Year:** 2025-2026  
-> A real-time distributed platform for collecting, processing, and visualizing system metrics, managing alerts, and providing a modern MVC interface.
+> **Cours :** Systèmes Distribués | **Année :** 2025-2026  
+> Plateforme distribuée de surveillance en temps réel — collecte, traitement et visualisation des métriques système.
 
 ---
 
-##  Context & Pedagogical Objectives
-Monitoring distributed systems requires tools capable of collecting, processing, and visualizing real-time data from multiple remote machines. This project aims to design a distributed platform that demonstrates core concepts in distributed computing while delivering a functional monitoring solution.
+## 🏗️ Architecture du système
 
-**Key Learning Objectives:**
-- ✅ Implement a complete distributed architecture
-- ✅ Apply multi-threading, TCP/UDP networking, and Java RMI
-- ✅ Design a modern graphical interface following the MVC pattern
-- ✅ Understand Backend/Frontend separation and Client/Server principles
-- ✅ Manage concurrency, data persistence, and real-time communication
+```
+┌─────────────┐  UDP:5000   ┌──────────────────┐   RMI:1099   ┌───────────────────┐
+│    AGENT    │ ──────────► │                  │ ◄──────────► │  Client Desktop   │
+│   (Java)    │  TCP:6000   │ SERVEUR CENTRAL  │              │  (Swing / Java)   │
+└─────────────┘ ──────────► │  Spring Boot     │   REST:8080  └───────────────────┘
+                             │  :8080           │ ◄──────────► ┌───────────────────┐
+                             └──────────────────┘              │   Client Web      │
+                                                               │  (React / Vite)   │
+                                                               └───────────────────┘
+```
 
----
-
-## 🏗️ System Architecture
-The system follows a **three-tier distributed architecture**:
-
-| Component | Role | Communication |
+| Composant | Rôle | Communication |
 |-----------|------|---------------|
-| **🖥️ Monitoring Agent** | Collects CPU, RAM, and Disk metrics periodically on target machines | Sends metrics via **UDP**, critical alerts via **TCP** |
-| **🌐 Central Server** | Aggregates data, manages agents, evaluates thresholds, exposes services | Listens to UDP/TCP, provides **RMI** & **REST** endpoints, stores metrics |
-| **📱 Client Interface** | Visualizes data, configures thresholds, manages users & exports | Desktop: **RMI** (Swing/JavaFX) \| Web: **REST** (Angular/React/Vue) |
+| **Agent** | Collecte CPU/RAM/Disk toutes les 5 s (OSHI) | Envoie via **UDP** (métriques) + **TCP** (alertes critiques) |
+| **Serveur** | Agrège les données, évalue les seuils, expose les services | **UDP** + **TCP** listeners, **RMI** registry, **REST** API |
+| **Client Desktop** | Affichage temps réel avec onglets et code couleur | **RMI** (Java Swing) |
+| **Client Web** | Dashboard interactif, graphiques, export | **REST** (React + Recharts) |
 
 ---
 
-## 📋 Key Features
-| Feature | Description |
-|---------|-------------|
-| 📈 **History & Statistics** | Store and analyze metrics over time to identify trends, peaks, and performance patterns |
-| 🚨 **Configurable Alerts** | Define custom thresholds that automatically trigger critical notifications |
-|  **Filtering & Search** | Efficiently manage large agent fleets with dynamic sorting, filtering, and search |
-| 👥 **User Management** | Secure access with authentication, role-based permissions (Admin/Observer) |
-| 📤 **Data Export** | Extract metrics and reports in CSV/JSON formats for external analysis |
+## 📂 Structure du projet
+
+```
+Distributed_Systems_Project-/
+├── shared/                        # Module partagé (modèles, constantes, interface RMI)
+│   └── src/main/java/com/monitor/shared/
+│       ├── constants/             # NetworkConstants, ThresholdConstants, Constants
+│       ├── model/                 # MetricData, Alert, AgentStatus, User, Role
+│       ├── rmi/                   # RMIMetricsService (interface partagée)
+│       └── utils/                 # Logger, SerializationUtils
+│
+├── agent/                         # Agent de surveillance (JVM autonome)
+│   └── src/main/java/com/monitor/agent/
+│       ├── config/                # AgentConfig (lecture agent.properties)
+│       ├── core/                  # AgentMain, MonitoringAgent, SystemMetricsCollector
+│       ├── network/               # UDPSender, TCPAlertClient
+│       └── threads/               # MetricPublisherTask
+│
+├── server/                        # Serveur central (Spring Boot)
+│   └── src/main/java/com/monitor/server/
+│       ├── alerting/              # ThresholdEngine, AlertDispatcher
+│       ├── config/                # SecurityConfig, ServerInitializer
+│       ├── core/                  # ServerMain, ConcurrentDataStore
+│       ├── network/               # UDPServer (port 5000), TCPServer (port 6000)
+│       ├── rest/                  # MetricsController (/api/*)
+│       ├── rmi/                   # RMIMetricsServiceImpl
+│       ├── security/              # AuthService (admin/viewer)
+│       └── storage/               # MetricsExporter (CSV/JSON)
+│
+├── client-desktop/                # Client Swing via RMI
+│   └── src/main/java/com/monitor/ui/desktop/
+│       ├── controller/            # DashboardController (MVC)
+│       ├── main/                  # DesktopApp
+│       ├── rmi/                   # RMIServiceProxy
+│       └── view/                  # DashboardView (onglets, code couleur)
+│
+├── client-web/                    # Client React (SPA)
+│   ├── src/
+│   │   ├── App.jsx                # Composant principal (métriques, alertes, export)
+│   │   ├── main.jsx               # Point d'entrée React
+│   │   └── index.css              # Styles (sans framework CSS)
+│   ├── index.html
+│   ├── vite.config.js             # Proxy /api → localhost:8080
+│   └── package.json
+│
+├── docs/
+│   ├── architecture.md            # Document d'architecture 15-20 pages
+│   ├── guide-utilisation.md       # Guide utilisateur complet
+│   ├── presentation/              # Script & plan de présentation 10 min
+│   └── uml/                       # Diagrammes UML (use case, classe, séquence)
+│
+├── scripts/
+│   ├── build-all.sh               # mvn clean install -DskipTests
+│   ├── start-server.sh            # Lance le serveur Spring Boot
+│   ├── start-agent.sh             # Lance un agent de surveillance
+│   ├── start-web.sh               # Lance le client web React (npm run dev)
+│   └── run-tests.sh               # mvn test
+│
+└── pom.xml                        # POM parent multi-module
+```
 
 ---
 
-## ️ Technology Stack
-| Layer | Technologies |
-|-------|--------------|
-| **Core** | Java 17+, Maven Multi-Module, Threads, `java.net`, `java.rmi` |
-| **Server** | UDP/TCP Listeners, RMI Registry, Spring Boot/JAX-RS (REST), H2/PostgreSQL |
-| **UI Option 1** | JavaFX or Swing, RMI Client, MVC Pattern |
-| **UI Option 2** | Angular / React / Vue, TypeScri`pt, REST API, WebSocket (optional) |
-| **Tools** | Git, PlantUML/Mermaid, Docker (optional), JUnit |
+## 🚀 Démarrage rapide
+
+### Prérequis
+
+| Outil | Version |
+|-------|---------|
+| JDK | **17+** |
+| Maven | **3.8+** |
+| Node.js | **18+** |
+
+### 1. Build
+
+```bash
+bash scripts/build-all.sh
+# Ou : mvn clean install -DskipTests
+```
+
+### 2. Démarrer le serveur
+
+```bash
+bash scripts/start-server.sh
+# → UDP :5000  TCP :6000  RMI :1099  REST :8080
+```
+
+### 3. Démarrer un agent
+
+```bash
+bash scripts/start-agent.sh
+# → Métriques envoyées toutes les 5 secondes
+```
+
+### 4. Ouvrir les interfaces
+
+```bash
+# Client Desktop (Swing / RMI)
+java -jar client-desktop/target/client-desktop-1.0-SNAPSHOT.jar
+
+# Client Web (React / REST)
+bash scripts/start-web.sh
+# → http://localhost:5173
+```
 
 ---
 
-## 📂 Project Structure
+## 🌐 API REST
 
+Base URL : `http://localhost:8080/api`
+
+| Endpoint | Description |
+|----------|-------------|
+| `GET /api/agents` | Liste des agents actifs |
+| `GET /api/metrics/latest` | Dernières métriques (tous agents) |
+| `GET /api/metrics/{id}/history` | Historique d'un agent |
+| `GET /api/alerts` | Toutes les alertes |
+| `GET /api/export/csv` | Export CSV |
+| `GET /api/export/json` | Export JSON |
+| `GET /h2-console` | Console H2 (base de données) |
+
+---
+
+## ⚙️ Configuration agent
+
+Fichier : `agent/src/main/resources/agent.properties`
+
+```properties
+agent.server.host=localhost     # IP du serveur central
+agent.server.port.udp=5000      # Port UDP métriques
+agent.server.port.tcp=6000      # Port TCP alertes
+agent.send.interval.ms=5000     # Intervalle d'envoi (ms)
+```
+
+---
+
+## 🔔 Seuils d'alerte
+
+| Métrique | Seuil | Sévérité |
+|----------|-------|----------|
+| CPU | > 85 % | CRITICAL |
+| RAM | > 90 % | CRITICAL |
+| Disque | > 95 % | CRITICAL |
+
+---
+
+## 📚 Documentation
+
+| Document | Contenu |
+|----------|---------|
+| [`docs/guide-utilisation.md`](docs/guide-utilisation.md) | Guide complet (build, lancement, config, API, dépannage) |
+| [`docs/architecture.md`](docs/architecture.md) | Architecture 15-20 pages (UML, flux, protocoles, déploiement) |
+| [`docs/presentation/presentation.md`](docs/presentation/presentation.md) | Script de présentation 10 minutes |
+| [`docs/uml/`](docs/uml/) | Diagrammes UML (use case, classe, séquence) |
+
+---
+
+## 🛠️ Stack technologique
+
+| Couche | Technologies |
+|--------|--------------|
+| **Collecte** | Java 17, OSHI 6.4 (CPU/RAM/Disk cross-platform) |
+| **Transport** | UDP (métriques), TCP (alertes), Java RMI (desktop), REST/HTTP (web) |
+| **Serveur** | Spring Boot 3.2, H2 (in-memory), ConcurrentHashMap |
+| **Desktop** | Java Swing, MVC pattern |
+| **Web** | React 18, Vite 5, axios, Recharts |
+| **Build** | Maven multi-module, npm |
 
