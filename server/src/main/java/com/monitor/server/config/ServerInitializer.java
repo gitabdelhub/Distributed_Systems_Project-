@@ -10,23 +10,23 @@ import org.springframework.stereotype.Component;
 import java.rmi.Naming;
 import java.rmi.registry.LocateRegistry;
 
-@Component
+// @Component
 public class ServerInitializer implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
         try {
-            // ✅ Récupérer l'instance Singleton du store
+            // Get Singleton instance of the data store
             ConcurrentDataStore dataStore = ConcurrentDataStore.getInstance();
 
-            // 1️⃣ Initialiser le registre RMI
+            // 1. Initialize the RMI registry
             LocateRegistry.createRegistry(Constants.RMI_PORT);
             RMIMetricsService service = new RMIMetricsServiceImpl(dataStore);
             String rmiUrl = "rmi://localhost:" + Constants.RMI_PORT + "/" + Constants.RMI_SERVICE_NAME;
             Naming.rebind(rmiUrl, service);
             System.out.println("[RMI] Service bound: " + rmiUrl);
 
-            // 2️⃣ Démarrer le récepteur UDP
+            // 2. Start the UDP receiver
             new UdpMetricsReceiver(Constants.UDP_PORT, dataStore).start();
             System.out.println("[UDP] Listener started on port " + Constants.UDP_PORT);
 
