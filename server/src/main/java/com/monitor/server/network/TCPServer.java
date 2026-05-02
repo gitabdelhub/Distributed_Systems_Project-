@@ -4,7 +4,7 @@ import com.monitor.server.alerting.AlertDispatcher;
 import com.monitor.server.core.ConcurrentDataStore;
 import com.monitor.shared.model.Alert;
 import com.monitor.shared.utils.SerializationUtils;
-import com.monitor.shared.constants.Constants;
+import com.monitor.shared.constants.NetworkConstants;
 import java.net.*;
 import java.io.*;
 
@@ -16,8 +16,8 @@ public class TCPServer implements Runnable {
 
     @Override
     public void run() {
-        try (ServerSocket serverSocket = new ServerSocket(Constants.TCP_PORT)) {
-            System.out.println("TCP Server en écoute sur port " + Constants.TCP_PORT);
+        try (ServerSocket serverSocket = new ServerSocket(NetworkConstants.PORT_TCP)) {
+            System.out.println("TCP Server en écoute sur port " + NetworkConstants.PORT_TCP);
             while (true) {
                 Socket client = serverSocket.accept();
                 new Thread(() -> handleClient(client)).start();
