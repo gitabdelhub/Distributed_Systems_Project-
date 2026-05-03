@@ -1,186 +1,177 @@
-# 🌐 Système de Surveillance Distribué
+# Système de Surveillance Distribué
 
-**Course:** Distributed Systems — **Academic Year:** 2025–2026  
-A real-time distributed platform for collecting, processing, and visualizing system metrics, managing alerts, and providing a modern MVC interface.
+**Module :** Systèmes Distribués — **Année :** 2025–2026
+
+Plateforme de monitoring en temps réel : collecte de métriques système, gestion des alertes, et interface web MVC. Le système repose sur une architecture Agent → Serveur → Client avec communication UDP/TCP et RMI.
 
 ---
 
-## 📋 System Requirements
+## Prérequis
 
-**Essential software to install before running the project:**
+Avant de lancer quoi que ce soit, vérifiez que vous avez installé :
 
-| Software | Version Required | Installation Notes |
-|----------|------------------|-------------------|
-| **Java** | JDK 17+ | [Download Oracle JDK 17](https://www.oracle.com/java/technologies/javase/jdk17-archive-downloads.html) or OpenJDK 17 |
-| **Maven** | 3.8+ | [Download Apache Maven](https://maven.apache.org/download.cgi) or use package manager |
-| **Node.js** | 18+ | [Download Node.js](https://nodejs.org/) (includes npm) |
-| **npm** | 9+ | Comes with Node.js installation |
-| **Git** | Latest | [Download Git](https://git-scm.com/) |
+| Outil | Version |
+|-------|---------|
+| Java (JDK) | 17+ |
+| Maven | 3.8+ |
+| Node.js | 18+ |
+| npm | 9+ |
+| Git | récent |
 
-**Verification commands:**
+Vérification rapide :
 ```bash
-java -version          # Should show Java 17+
-mvn -version           # Should show Maven 3.8+
-node --version         # Should show Node.js 18+
-npm --version          # Should show npm 9+
+java -version
+mvn -version
+node --version
+npm --version
 ```
 
 ---
 
-## 🎯 Context & Learning Objectives
-This project demonstrates a complete distributed system with real-time monitoring.
+## Objectifs du projet
 
-**Objectives**
-- Implement a distributed architecture (Agent → Server → Client)
-- Use multi-threading, TCP/UDP networking, and Java RMI
-- Build a modern UI with MVC principles
-- Separate backend and frontend responsibilities
-- Handle concurrency, persistence, and real-time updates
+- Mettre en place une architecture distribuée complète (Agent → Serveur → Client)
+- Utiliser le multi-threading, les sockets TCP/UDP et Java RMI
+- Construire une interface moderne avec séparation MVC
+- Gérer la concurrence, la persistance et les mises à jour en temps réel
 
 ---
 
-## 🏗️ System Architecture
+## Architecture
 
-| Component | Role | Communication |
-|----------|------|---------------|
-| **Monitoring Agent** | Collects CPU/RAM/Disk metrics | UDP for metrics, TCP for critical alerts |
-| **Central Server** | Aggregates data, manages agents, evaluates thresholds | UDP/TCP listeners, RMI services, REST API |
-| **Client UI** | Visualizes data and alerts, export, configuration | Web (REST) and/or Desktop (RMI) |
-
----
-
-## ✅ Key Features
-
-- **Real-time Metrics** (CPU / RAM / Disk)
-- **History & Statistics**
-- **Configurable Alerts**
-- **Filtering & Search**
-- **User Management** (Admin / Observer)
-- **Export CSV / JSON**
+| Composant | Rôle | Communication |
+|-----------|------|---------------|
+| Agent de monitoring | Collecte métriques CPU/RAM/Disque | UDP (métriques), TCP (alertes critiques) |
+| Serveur central | Agrège les données, gère les seuils | UDP/TCP + RMI + REST API |
+| Interface client | Visualisation, alertes, export, config | Web (REST) et/ou Desktop (RMI) |
 
 ---
 
-## 🧰 Tech Stack
+## Fonctionnalités
 
-| Layer | Technologies |
-|------|--------------|
-| **Core** | Java 17, Maven, Threads, `java.net`, `java.rmi` |
-| **Server** | Spring Boot, UDP/TCP, RMI, H2 |
-| **Client (Web)** | React 18, Vite, TailwindCSS, Axios, Recharts |
-| **Tools** | Git, JUnit, Mermaid/PlantUML |
+- Métriques en temps réel (CPU / RAM / Disque)
+- Historique et statistiques
+- Alertes configurables par seuil
+- Filtrage et recherche
+- Gestion des utilisateurs (Admin / Observer)
+- Export CSV / JSON
 
 ---
 
-## 📂 Project Structure
+## Stack technique
+
+| Couche | Technologies |
+|--------|--------------|
+| Core | Java 17, Maven, Threads, `java.net`, `java.rmi` |
+| Serveur | Spring Boot, UDP/TCP, RMI, H2 |
+| Client Web | React 18, Vite, TailwindCSS, Axios, Recharts |
+| Outils | Git, JUnit, PlantUML |
+
+---
+
+## Structure du projet
 
 ```
 Distributed_Systems_Project-/
-├── shared/                          # Shared models, constants, and utilities
+├── shared/                          # Modèles, constantes et utilitaires partagés
 │   └── src/main/java/com/monitor/shared/
 │       ├── model/                   # MetricData, Alert, User, Role, AgentStatus
-│       ├── rmi/                     # RMIMetricsService interface
+│       ├── rmi/                     # Interface RMIMetricsService
 │       ├── constants/               # NetworkConstants, ThresholdConstants
 │       └── utils/                   # Logger, SerializationUtils
 │
-├── agent/                           # Monitoring Agent (UDP sender, TCP alert client)
+├── agent/                           # Agent de monitoring (UDP sender, TCP alert client)
 │   └── src/main/java/com/monitor/agent/
 │       ├── core/                    # AgentMain, MonitoringAgent, SystemMetricsCollector
 │       ├── network/                 # UDPSender, TCPAlertClient
-│       └── threads/                 # MetricPublisherTask (scheduled collection)
+│       └── threads/                 # MetricPublisherTask
 │
-├── server/                          # Central Server (Spring Boot)
+├── server/                          # Serveur central (Spring Boot)
 │   └── src/main/java/com/monitor/server/
 │       ├── core/                    # ServerMain, ConcurrentDataStore
 │       ├── network/                 # UDPServer, TCPServer
 │       ├── alerting/                # ThresholdEngine, AlertDispatcher
 │       ├── rmi/                     # RMIServer, RMIMetricsServiceImpl
 │       ├── rest/                    # MetricsController, AdminController
-│       ├── storage/                 # MetricsRepository (H2), MetricsExporter (CSV/JSON)
+│       ├── storage/                 # MetricsRepository (H2), MetricsExporter
 │       ├── security/                # AuthService
 │       └── config/                  # SecurityConfig, ServerInitializer
 │
-├── client-desktop/                  # Desktop Client (Swing + RMI + REST)
+├── client-desktop/                  # Client Desktop (Swing + RMI + REST)
 │   └── src/main/java/com/monitor/ui/desktop/
-│       ├── main/                    # DesktopApp entry point
+│       ├── main/                    # Point d'entrée DesktopApp
 │       ├── controller/              # DashboardController
-│       ├── view/                    # DashboardView (Swing tabs)
+│       ├── view/                    # DashboardView (onglets Swing)
 │       └── rmi/                     # RMIServiceProxy
 │
-├── client-web/                      # Web Client (React + Vite + Tailwind)
+├── client-web/                      # Client Web (React + Vite + Tailwind)
 │   ├── src/
-│   │   ├── main.jsx                 # React entry point
-│   │   ├── App.jsx                  # Tabbed dashboard (Metrics / History / Alerts)
-│   │   ├── api/api.js               # Axios REST calls
+│   │   ├── main.jsx
+│   │   ├── App.jsx                  # Dashboard avec onglets Métriques / Historique / Alertes
+│   │   ├── api/api.js               # Appels REST via Axios
 │   │   └── components/
-│   │       ├── MetricsTable.jsx     # Live metrics with color-coded badges
-│   │       ├── AlertsTable.jsx      # Alerts with severity coloring
-│   │       └── AgentChart.jsx       # Recharts line chart for history
+│   │       ├── MetricsTable.jsx
+│   │       ├── AlertsTable.jsx
+│   │       └── AgentChart.jsx       # Graphiques Recharts
 │   └── index.html
 │
-├── docs/                            # Architecture docs & UML diagrams
+├── docs/
 │   ├── architecture.md
 │   ├── guide-utilisation.md
-│   └── uml/                         # PlantUML diagram images
+│   └── uml/
 │
-├── scripts/                         # Helper shell scripts
+├── scripts/
 │   ├── build-all.sh
 │   ├── start-server.sh
 │   ├── start-agent.sh
 │   └── run-tests.sh
 │
-└── pom.xml                          # Maven multi-module root
+└── pom.xml
 ```
 
 ---
 
-## ▶️ Complete Setup & Run Instructions
+## Lancer le projet
 
-### 🚀 Step 1: Clone and Setup
+### Étape 1 — Cloner le dépôt
+
 ```powershell
-# Navigate to Downloads folder
 cd Downloads
-
-# Clone the project with a specific folder name
 git clone https://github.com/OualidDR/Distributed_Systems_Project- Distributed_Systems_Working_test
-
-# Enter the project folder
 cd Distributed_Systems_Working_test
 ```
 
-### 🔧 Step 2: Build Dependencies
+### Étape 2 — Compiler les modules
+
 ```powershell
-# Build shared module first
 mvn --% -f shared\pom.xml clean install
-
-# Build agent with dependencies
 mvn --% -f agent\pom.xml clean package
-
-# Build server
 mvn --% -f server\pom.xml clean package
 ```
 
-### 📦 Step 3: Install Web Dependencies
+> **Important :** toujours compiler `shared` en premier, sinon les autres modules ne trouvent pas les classes communes.
+
+### Étape 3 — Installer les dépendances front
+
 ```powershell
 cd client-web
 npm install
 cd ..
 ```
 
-### 🎮 Step 4: Run All Components
+### Étape 4 — Lancer les 3 composants (3 terminaux séparés)
 
-**Open 3 separate terminals:**
-
-#### Terminal 1 - Start Server
+**Terminal 1 — Serveur**
 ```bash
 mvn --% -f server\pom.xml spring-boot:run -Dspring-boot.run.mainClass=com.monitor.server.core.ServerMain
 ```
 
-#### Terminal 2 - Start Agent
+**Terminal 2 — Agent**
 ```bash
 java -jar agent\target\agent-1.0-SNAPSHOT.jar
 ```
 
-#### Terminal 3 - Start Web UI
+**Terminal 3 — Interface web**
 ```bash
 cd client-web
 npm run dev
@@ -188,55 +179,37 @@ npm run dev
 
 ---
 
-## 🌐 Access Points
+## Points d'accès
 
-| Service | URL | Description |
-|---------|-----|-------------|
-| **Web UI** | http://localhost:3000 | Main monitoring interface |
-| **API Server** | http://localhost:8080/api | REST API endpoints |
-| **WebSocket** | ws://localhost:8080/ws | Real-time updates |
+| Service | URL |
+|---------|-----|
+| Interface web | http://localhost:3000 |
+| API REST | http://localhost:8080/api |
+| WebSocket | ws://localhost:8080/ws |
 
 ---
 
-## 🔧 Troubleshooting
+## Problèmes fréquents
 
-### Common Issues & Solutions
+**`Unable to access jarfile agent/target/agent-1.0-SNAPSHOT.jar`**  
+L'agent n'a pas été compilé. Relancer les commandes Maven dans l'ordre (shared → agent).
 
-**❌ "Error: Unable to access jarfile agent/target/agent-1.0-SNAPSHOT.jar"**
+**`Cannot find module 'autoprefixer'`**  
 ```bash
-# Solution: Build the agent first
-mvn --% -f shared\pom.xml clean install
-mvn --% -f agent\pom.xml clean package
-```
-
-**❌ "Cannot find module 'autoprefixer'"**
-```bash
-# Solution: Install missing dependency
 cd client-web
 npm install autoprefixer
 ```
 
-**❌ "NoClassDefFoundError: com/monitor/shared/utils/Logger"**
-```bash
-# Solution: Build shared module first
-mvn --% -f shared\pom.xml clean install
-```
+**`NoClassDefFoundError: com/monitor/shared/utils/Logger`**  
+Le module shared n'est pas dans le dépôt local Maven. Refaire `mvn -f shared\pom.xml clean install`.
 
-**❌ Port conflicts**
-- Change ports in configuration files if needed
-- Default: Server (8080), Web UI (3000)
-
-### Quick Setup Script
-For automated setup, run:
-```bash
-scripts\setup-dev.bat
-```
+**Conflit de ports**  
+Le serveur tourne par défaut sur 8080 et le front sur 3000. Si un de ces ports est déjà utilisé, modifier la config correspondante avant de relancer.
 
 ---
 
-## 📸 Screenshots
+## Aperçu
 
-![Dashboard](docs/screenshots/dashboard1.png)  
+![Dashboard](docs/screenshots/dashboard1.png)
 ![Dashboard](docs/screenshots/dashboard2.png)
-
----
+![Dashboard](docs/screenshots/dashboard3.png)
